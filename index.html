@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Home Solutions — Smarter Living, Every Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf7f2;
+    --warm-white: #f5f0e8;
+    --sand: #e8dfd0;
+    --stone: #c4b8a8;
+    --espresso: #3d2e1e;
+    --forest: #2d4a3e;
+    --sage: #7a9e8e;
+    --terracotta: #c4603a;
+    --amber: #e8943a;
+    --muted: #7a6e62;
+    --card-bg: #ffffff;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+    --radius: 20px;
+    --shadow-soft: 0 4px 32px rgba(61,46,30,0.08);
+    --shadow-hover: 0 16px 48px rgba(61,46,30,0.14);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--cream); color: var(--espresso); font-family: var(--font-body); overflow-x: hidden; }
+  body::after {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000;
+  }
+
+  /* ── ACTIVITY BUBBLES ── */
+  #activity-container {
+    position: fixed; bottom: 24px; left: 24px;
+    z-index: 500; display: flex; flex-direction: column; gap: 10px;
+    pointer-events: none;
+  }
+  .activity-bubble {
+    background: #fff;
+    border-radius: 16px;
+    padding: 12px 16px;
+    box-shadow: 0 8px 32px rgba(61,46,30,0.15);
+    display: flex; align-items: center; gap: 12px;
+    max-width: 300px;
+    border: 1px solid rgba(196,184,168,0.3);
+    animation: bubbleIn 0.45s cubic-bezier(.34,1.56,.64,1) both;
+    font-size: 13px;
+  }
+  .activity-bubble.hiding { animation: bubbleOut 0.35s ease forwards; }
+  .bubble-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--sage), var(--forest));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0; color: #fff; font-weight: 700;
+  }
+  .bubble-text strong { display: block; font-weight: 600; color: var(--espresso); font-size: 13px; line-height: 1.3; }
+  .bubble-text small { color: var(--muted); font-size: 11px; }
+  @keyframes bubbleIn {
+    from { opacity: 0; transform: translateX(-28px) scale(0.92); }
+    to   { opacity: 1; transform: translateX(0) scale(1); }
+  }
+  @keyframes bubbleOut {
+    from { opacity: 1; transform: translateX(0) scale(1); }
+    to   { opacity: 0; transform: translateX(-20px) scale(0.95); }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 200;
+    padding: 18px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(250,247,242,0.93); backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(196,184,168,0.3);
+  }
+  .logo { font-family: var(--font-display); font-size: 20px; color: var(--espresso); }
+  .logo em { color: var(--sage); font-style: italic; }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--espresso); }
+  .nav-cta {
+    background: var(--forest); color: #fff;
+    padding: 10px 22px; border-radius: 100px;
+    font-size: 13px; font-weight: 600; text-decoration: none;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .nav-cta:hover { background: var(--espresso); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(45,74,62,0.25); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 110px 60px 80px;
+    display: grid; grid-template-columns: 1fr 1.1fr;
+    gap: 60px; align-items: center; min-height: 100vh;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(122,158,142,0.12) 0%, transparent 70%);
+    top: -200px; right: -100px; border-radius: 50%; pointer-events: none;
+  }
+
+  .hero-text { position: relative; z-index: 1; animation: fadeUp 0.8s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(122,158,142,0.12); border: 1px solid rgba(122,158,142,0.3);
+    color: var(--forest); border-radius: 100px;
+    padding: 6px 16px; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 24px;
+  }
+  .hero-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--sage); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.5)} }
+
+  .hero h1 { font-family: var(--font-display); font-size: clamp(40px,4.5vw,68px); line-height: 1.1; letter-spacing: -1px; margin-bottom: 20px; }
+  .hero h1 em { color: var(--sage); font-style: italic; }
+  .hero-desc { font-size: 17px; line-height: 1.7; color: var(--muted); max-width: 440px; margin-bottom: 16px; }
+
+  .urgency-strip {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--terracotta); color: #fff;
+    border-radius: 12px; padding: 10px 18px;
+    font-size: 13px; font-weight: 600; margin-bottom: 32px;
+    animation: urgencyPulse 3s ease infinite;
+  }
+  @keyframes urgencyPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(196,96,58,0.3); }
+    50% { box-shadow: 0 0 0 8px rgba(196,96,58,0); }
+  }
+  .urgency-strip .tag { background: rgba(255,255,255,0.2); border-radius: 6px; padding: 2px 8px; font-size: 12px; }
+
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--forest); color: #fff;
+    padding: 16px 30px; border-radius: 100px;
+    font-size: 15px; font-weight: 600; text-decoration: none;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary:hover { background: var(--espresso); transform: translateY(-2px); box-shadow: 0 10px 32px rgba(45,74,62,0.25); }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: var(--espresso);
+    padding: 16px 28px; border-radius: 100px;
+    font-size: 15px; font-weight: 500; text-decoration: none;
+    border: 1.5px solid var(--sand); transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--stone); background: rgba(196,184,168,0.1); }
+
+  .social-proof { margin-top: 32px; display: flex; align-items: center; gap: 14px; }
+  .stars { color: var(--amber); font-size: 15px; letter-spacing: 2px; }
+  .proof-text { font-size: 13px; color: var(--muted); }
+  .proof-text strong { color: var(--espresso); }
+
+  /* Hero image */
+  .hero-visual { position: relative; z-index: 1; animation: fadeUp 0.8s 0.15s ease both; }
+  .hero-img-wrap {
+    border-radius: 28px; overflow: hidden;
+    box-shadow: 0 24px 80px rgba(61,46,30,0.14);
+    aspect-ratio: 4/3;
+    border: 1px solid rgba(196,184,168,0.3);
+    position: relative;
+  }
+  .hero-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* Badge OUTSIDE the image wrap — no overlap */
+  .badge-discount {
+    position: absolute; top: -20px; right: -20px; z-index: 10;
+    background: var(--terracotta); color: #fff;
+    width: 76px; height: 76px; border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: 22px; line-height: 1;
+    box-shadow: 0 8px 24px rgba(196,96,58,0.4);
+    border: 3px solid #fff;
+    animation: badgePop 0.6s 0.5s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes badgePop { from{opacity:0;transform:scale(0.5) rotate(-15deg)} to{opacity:1;transform:scale(1) rotate(0deg)} }
+  .badge-discount span { font-family: var(--font-body); font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
+
+  .badge-cart {
+    position: absolute; bottom: -16px; left: -16px; z-index: 10;
+    background: #fff; border-radius: 16px; padding: 12px 18px;
+    box-shadow: var(--shadow-hover);
+    display: flex; align-items: center; gap: 10px;
+    animation: slideIn 0.5s 0.8s ease both;
+    border: 1px solid rgba(196,184,168,0.2);
+  }
+  @keyframes slideIn { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
+  .badge-cart .cart-icon { font-size: 20px; }
+  .badge-cart strong { display: block; font-size: 13px; font-weight: 600; color: var(--espresso); }
+  .badge-cart small { color: var(--muted); font-size: 11px; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--sand), transparent); margin: 0 60px; }
+
+  /* ── CATALOG ── */
+  .catalog { padding: 80px 60px; }
+  .catalog-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; }
+  .catalog-label { font-size: 11px; color: var(--sage); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+  .catalog-title { font-family: var(--font-display); font-size: clamp(28px,3vw,42px); color: var(--espresso); letter-spacing: -0.8px; }
+  .catalog-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
+  .all-link { color: var(--forest); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(45,74,62,0.3); transition: border-color 0.2s; }
+  .all-link:hover { border-color: var(--forest); }
+
+  .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+
+  /* ── PRODUCT CARD ── */
+  .product-card {
+    background: var(--card-bg); border-radius: var(--radius); overflow: hidden;
+    border: 1px solid rgba(196,184,168,0.25); box-shadow: var(--shadow-soft);
+    transition: transform 0.3s, box-shadow 0.3s; position: relative;
+  }
+  .product-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+
+  .ribbon {
+    position: absolute; top: 16px; left: 16px; z-index: 2;
+    background: var(--terracotta); color: #fff;
+    border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 700;
+  }
+  .tag-hot {
+    position: absolute; top: 16px; right: 16px; z-index: 2;
+    background: var(--amber); color: #fff;
+    border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 700;
+  }
+
+  .card-media { height: 220px; overflow: hidden; background: var(--warm-white); position: relative; }
+  .card-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s; }
+  .card-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .product-card:hover .card-media img { transform: scale(1.04); }
+
+  .timer-bar {
+    background: #fff7f0; border-bottom: 1px solid rgba(232,148,58,0.15);
+    padding: 8px 20px; display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px; color: var(--terracotta);
+  }
+  .timer-bar strong { font-family: monospace; font-size: 13px; font-weight: 700; letter-spacing: 1px; }
+
+  .card-body { padding: 20px; }
+  .card-cat { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--sage); font-weight: 600; margin-bottom: 6px; }
+  .card-name { font-family: var(--font-display); font-size: 17px; color: var(--espresso); margin-bottom: 8px; line-height: 1.25; }
+  .card-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+  .card-rating { font-size: 12px; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .card-rating .stars-sm { color: var(--amber); font-size: 12px; }
+
+  .price-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .price-now { font-family: var(--font-display); font-size: 22px; color: var(--espresso); }
+  .price-was { font-size: 14px; color: var(--stone); text-decoration: line-through; }
+  .price-save { font-size: 11px; background: rgba(196,96,58,0.1); color: var(--terracotta); border-radius: 6px; padding: 2px 8px; font-weight: 600; }
+
+  .card-cta {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--forest); color: #fff;
+    padding: 13px 20px; border-radius: 12px;
+    text-decoration: none; font-size: 14px; font-weight: 600;
+    transition: background 0.2s, transform 0.15s; width: 100%;
+  }
+  .card-cta:hover { background: var(--espresso); transform: scale(1.01); }
+  .card-cta .cart-anim { transition: transform 0.2s; }
+  .product-card:hover .card-cta .cart-anim { transform: translateX(3px); }
+
+  .viewed-strip {
+    border-top: 1px solid rgba(196,184,168,0.2); padding: 8px 20px;
+    font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px;
+  }
+  .viewed-dot { width: 6px; height: 6px; background: var(--sage); border-radius: 50%; animation: pulse 2s infinite; }
+
+  /* ── COMING SOON CARD ── */
+  .card-coming {
+    background: var(--warm-white);
+    border: 2px dashed rgba(196,184,168,0.5);
+    border-radius: var(--radius);
+    min-height: 320px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  }
+  .coming-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 2px solid var(--sand);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: var(--stone);
+  }
+  .card-coming p { font-size: 13px; color: var(--stone); font-style: italic; }
+  .card-coming strong { font-family: var(--font-display); font-size: 17px; color: var(--muted); }
+
+  /* ── WHY ── */
+  .why { background: var(--espresso); padding: 80px 60px; }
+  .why-inner { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 48px; }
+  .why-item { display: flex; flex-direction: column; gap: 12px; }
+  .why-icon { font-size: 28px; }
+  .why-item h3 { font-family: var(--font-display); font-size: 20px; color: var(--cream, #faf7f2); }
+  .why-item p { font-size: 14px; color: var(--stone); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--warm-white); border-top: 1px solid var(--sand);
+    padding: 48px 60px; display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 20px;
+  }
+  .footer-logo { font-family: var(--font-display); font-size: 18px; color: var(--espresso); }
+  .footer-logo em { color: var(--sage); font-style: italic; }
+  .footer-disc { font-size: 11px; color: var(--muted); max-width: 400px; line-height: 1.6; }
+  .footer-disc a { color: var(--forest); text-decoration: none; }
+  .footer-right { font-size: 11px; color: var(--stone); text-align: right; }
+
+  /* ── REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.65s, transform 0.65s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 100px 20px 80px; min-height: auto; }
+    .catalog, .why, footer { padding-left: 20px; padding-right: 20px; }
+    .divider { margin: 0 20px; }
+    .catalog-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .footer-right { text-align: left; }
+    #activity-container { left: 12px; bottom: 12px; }
+    .activity-bubble { max-width: 260px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ACTIVITY BUBBLES CONTAINER -->
+<div id="activity-container"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Your Home <em>Solutions</em></div>
+  <ul class="nav-links">
+    <li><a href="#featured">Featured</a></li>
+    <li><a href="#catalog">All Products</a></li>
+    <li><a href="#why">About</a></li>
+  </ul>
+  <a href="https://hong-kong-time100-co-limited.kckb.me/z3d" target="_blank" rel="noopener" class="nav-cta">Shop Now ↗</a>
+</nav>
+
+<!-- HERO / FEATURED -->
+<section class="hero" id="featured">
+  <div class="hero-text">
+    <div class="hero-eyebrow">&#127968; Top Pick · Summer Sale</div>
+    <h1>The Smarter Way to Run Your <em>Home.</em></h1>
+    <p class="hero-desc">Upgrade your living space with appliances that actually make daily life easier — beautifully designed, effortlessly smart.</p>
+
+    <div class="urgency-strip">
+      <span>&#9889;</span>
+      <span class="tag">Summer Sale — Save $40</span>
+      Ends in <span class="timer" id="hero-timer">09:47:32</span>
+    </div>
+
+    <div class="hero-actions">
+      <a href="https://hong-kong-time100-co-limited.kckb.me/z3d" target="_blank" rel="noopener" class="btn-primary">
+        &#128722; Add to Cart
+      </a>
+      <a href="#catalog" class="btn-ghost">Browse All →</a>
+    </div>
+
+    <div class="social-proof">
+      <span class="stars">★★★★★</span>
+      <span class="proof-text"><strong>4.8/5</strong> from 2,400+ happy homes</span>
+    </div>
+  </div>
+
+  <!-- Hero visual: badge OUTSIDE img-wrap so it's never covered -->
+  <div class="hero-visual">
+    <div style="position:relative; display:inline-block; width:100%;">
+      <div class="badge-discount" style="position:absolute;top:-20px;right:-20px;z-index:10;">Save<span>$40</span></div>
+      <div class="hero-img-wrap">
+        <img src="https://www.magomaga.com/cdn/shop/files/image_272.png?v=1778304874&width=1100" alt="Roma Pro V1.5 Coffee Roaster" />
+      </div>
+      <div class="badge-cart" style="position:absolute;bottom:-16px;left:-16px;z-index:10;">
+        <span class="cart-icon">&#128722;</span>
+        <div>
+          <strong>147 people viewing</strong>
+          <small>12 added to cart this hour</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CATALOG -->
+<section class="catalog" id="catalog">
+  <div class="catalog-header reveal">
+    <div>
+      <div class="catalog-label">&#127968; Our Picks</div>
+      <div class="catalog-title">Home Essentials</div>
+      <div class="catalog-sub">Curated appliances worth every penny</div>
+    </div>
+    <a href="https://hong-kong-time100-co-limited.kckb.me/z3d" target="_blank" rel="noopener" class="all-link">View All →</a>
+  </div>
+
+  <div class="catalog-grid">
+
+    <!-- PRODUCT 1 — Roma Pro V1.5 (Featured, from hero) -->
+    <div class="product-card reveal">
+      <div class="ribbon">&#128293; Summer Sale</div>
+      <div class="tag-hot">TOP PICK</div>
+      <div class="card-media">
+        <img src="https://www.magomaga.com/cdn/shop/files/image_272.png?v=1778304874&width=1100" alt="Roma Pro V1.5 Coffee Roaster" loading="lazy" />
+      </div>
+      <div class="timer-bar">
+        <span>&#9201; Deal ends in</span>
+        <strong class="countdown" data-seconds="43200"></strong>
+      </div>
+      <div class="card-body">
+        <div class="card-cat">Smart Coffee</div>
+        <div class="card-name">Roma Pro V1.5</div>
+        <div class="card-desc">Smart home coffee bean roaster — craft your perfect roast, right from your countertop. App-controlled precision.</div>
+        <div class="price-row">
+          <span class="price-now">$440</span>
+          <span class="price-was">$480</span>
+          <span class="price-save">Save $40</span>
+        </div>
+        <a href="https://hong-kong-time100-co-limited.kckb.me/z3d" target="_blank" rel="noopener" class="card-cta">
+          &#128722; <span>Add to Cart</span> <span class="cart-anim">→</span>
+        </a>
+      </div>
+      <div class="viewed-strip">
+        <span class="viewed-dot"></span>
+        <span>54 people viewing this right now</span>
+      </div>
+    </div>
+
+    <!-- PRODUCT 2 — Moss Air (Mosslab video) -->
+    <div class="product-card reveal" style="transition-delay:0.06s">
+      <div class="ribbon">&#127807; 27% OFF</div>
+      <div class="tag-hot">NEW</div>
+      <div class="card-media">
+        <video autoplay muted loop playsinline>
+          <source src="https://cdn.shopify.com/videos/c/o/v/a9798ba39b6f4f378925f2178b3ccc30.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="timer-bar">
+        <span>&#9201; Deal ends in</span>
+        <strong class="countdown" data-seconds="38700"></strong>
+      </div>
+      <div class="card-body">
+        <div class="card-cat">Air &amp; Wellness</div>
+        <div class="card-name">Moss Air — Living Moss Humidifier</div>
+        <div class="card-desc">Breathe in nature. This humidifier brings living moss into your home — purifying, hydrating, and calming your space naturally.</div>
+        <div class="card-rating">
+          <span class="stars-sm">★★★★★</span>
+          <span>4.7 · 312 reviews</span>
+        </div>
+        <div class="price-row">
+          <span class="price-now">$89</span>
+          <span class="price-was">$122</span>
+          <span class="price-save">Save $33</span>
+        </div>
+        <a href="https://mosslab.kckb.st/z3d" target="_blank" rel="noopener" class="card-cta">
+          &#128722; <span>Add to Cart</span> <span class="cart-anim">→</span>
+        </a>
+      </div>
+      <div class="viewed-strip">
+        <span class="viewed-dot"></span>
+        <span>31 people viewing this right now</span>
+      </div>
+    </div>
+
+    <!-- PRODUCT 3 — GoveeLife Smart Nugget Ice Maker Pro -->
+    <div class="product-card reveal" style="transition-delay:0.12s">
+      <div class="ribbon">&#127849; HOT DEAL</div>
+      <div class="card-media">
+        <img src="https://cdn.shopify.com/s/files/1/0977/5310/4679/files/ID_-2.png?v=1779983317" alt="GoveeLife Smart Nugget Ice Maker Pro" loading="lazy" />
+      </div>
+      <div class="timer-bar">
+        <span>&#9201; Deal ends in</span>
+        <strong class="countdown" data-seconds="32400"></strong>
+      </div>
+      <div class="card-body">
+        <div class="card-cat">Kitchen Appliances</div>
+        <div class="card-name">GoveeLife Smart Nugget Ice Maker Pro</div>
+        <div class="card-desc">Soft, chewable nugget ice — on demand. Self-cleaning, app-controlled, and ready in minutes.</div>
+        <div class="card-rating">
+          <span class="stars-sm">★★★★★</span>
+          <span>4.9 · 24 reviews</span>
+        </div>
+        <div class="price-row">
+          <span class="price-now">$499.99</span>
+        </div>
+        <a href="https://govee.sjv.io/z3d" target="_blank" rel="noopener" class="card-cta">
+          &#128722; <span>Add to Cart</span> <span class="cart-anim">→</span>
+        </a>
+      </div>
+      <div class="viewed-strip">
+        <span class="viewed-dot"></span>
+        <span>67 people viewing this right now</span>
+      </div>
+    </div>
+
+    <!-- PRODUCT 4 — GoveeLife 42" Smart Tower Fan 2 Max -->
+    <div class="product-card reveal" style="transition-delay:0.18s">
+      <div class="ribbon">&#10024; Amazon Pick</div>
+      <div class="card-media">
+        <img src="https://cdn.shopify.com/s/files/1/0977/5310/4679/files/H7105-PP_-1_1.jpg?v=1773376152" alt="GoveeLife 42 Smart Tower Fan 2 Max" loading="lazy" />
+      </div>
+      <div class="timer-bar">
+        <span>&#9201; Deal ends in</span>
+        <strong class="countdown" data-seconds="27900"></strong>
+      </div>
+      <div class="card-body">
+        <div class="card-cat">Cooling &amp; Comfort</div>
+        <div class="card-name">GoveeLife 42" Smart Tower Fan 2 Max</div>
+        <div class="card-desc">Ultra-quiet 42" tower fan with app &amp; voice control, sleep mode, and 90° oscillation. Stay cool, stay smart.</div>
+        <div class="card-rating">
+          <span class="stars-sm">★★★★★</span>
+          <span>4.6 · 807 reviews on Amazon</span>
+        </div>
+        <div class="price-row">
+          <span class="price-now">$179.99</span>
+        </div>
+        <a href="https://govee.sjv.io/z3d" target="_blank" rel="noopener" class="card-cta">
+          &#128722; <span>Add to Cart</span> <span class="cart-anim">→</span>
+        </a>
+      </div>
+      <div class="viewed-strip">
+        <span class="viewed-dot"></span>
+        <span>38 people viewing this right now</span>
+      </div>
+    </div>
+
+    <!-- COMING SOON x2 -->
+    <div class="card-coming reveal" style="transition-delay:0.24s">
+      <div class="coming-icon">+</div>
+      <strong>More finds coming</strong>
+      <p>New picks dropping soon — stay tuned.</p>
+    </div>
+
+    <div class="card-coming reveal" style="transition-delay:0.3s">
+      <div class="coming-icon">&#127381;</div>
+      <strong>Something exciting</strong>
+      <p>We're testing it before we recommend it.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why" id="why">
+  <div class="why-inner">
+    <div class="why-item reveal">
+      <div class="why-icon">&#128269;</div>
+      <h3>Hand-Picked Only</h3>
+      <p>Every product is tested and curated. No filler — just things that genuinely work.</p>
+    </div>
+    <div class="why-item reveal" style="transition-delay:0.08s">
+      <div class="why-icon">&#127757;</div>
+      <h3>Ships Worldwide</h3>
+      <p>USA, Europe, Australia, Middle East — these products reach you wherever home is.</p>
+    </div>
+    <div class="why-item reveal" style="transition-delay:0.16s">
+      <div class="why-icon">&#128172;</div>
+      <h3>Real Reviews</h3>
+      <p>We only feature products with proven buyer feedback from thousands of real households.</p>
+    </div>
+    <div class="why-item reveal" style="transition-delay:0.24s">
+      <div class="why-icon">&#129309;</div>
+      <h3>Transparent</h3>
+      <p>We earn a small commission on purchases. Costs you nothing extra — helps us keep curating.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Your Home <em>Solutions</em></div>
+  <div class="footer-disc">
+    This site contains affiliate links. We may earn a commission when you purchase — at no extra cost to you. We only recommend products we genuinely stand behind.<br>
+    <a href="https://hong-kong-time100-co-limited.kckb.me/z3d" target="_blank" rel="noopener">Featured Pick →</a>
+  </div>
+  <div class="footer-right">
+    © 2020–2025 Your Home Solutions<br>
+    <span style="font-size:10px;">All rights reserved.</span>
+  </div>
+</footer>
+
+<script>
+  // ── Countdown timers ──
+  function formatTime(s) {
+    const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+    return [h,m,sec].map(v=>String(v).padStart(2,'0')).join(':');
+  }
+  let heroSecs = 35252;
+  const heroEl = document.getElementById('hero-timer');
+  if(heroEl) heroEl.textContent = formatTime(heroSecs);
+  setInterval(()=>{ if(heroSecs>0) heroSecs--; if(heroEl) heroEl.textContent=formatTime(heroSecs); },1000);
+
+  document.querySelectorAll('.countdown').forEach(el=>{
+    let s = parseInt(el.dataset.seconds)||14400;
+    el.textContent = formatTime(s);
+    setInterval(()=>{ if(s>0)s--; el.textContent=formatTime(s); },1000);
+  });
+
+  // ── Scroll reveal ──
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*70); obs.unobserve(e.target); } });
+  },{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  // ── Smooth scroll ──
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{ e.preventDefault(); document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'}); });
+  });
+
+  // ── Cart button feedback ──
+  document.querySelectorAll('.card-cta').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      const orig=this.innerHTML;
+      this.innerHTML='&#10003; Added!';
+      this.style.background='#2d4a3e';
+      setTimeout(()=>{ this.innerHTML=orig; this.style.background=''; },1600);
+    });
+  });
+
+  // ── Viewing now fluctuation ──
+  setInterval(()=>{
+    document.querySelectorAll('.viewed-strip span:last-child').forEach(el=>{
+      const m=el.textContent.match(/(\d+)/);
+      if(m){ const n=Math.max(5,parseInt(m[1])+(Math.random()>0.5?1:-1)); el.textContent=el.textContent.replace(/\d+/,n); }
+    });
+  },7000);
+
+  // ── ACTIVITY BUBBLES ──
+  const activities = [
+    { emoji:'☕', name:'Sarah M.',    action:'just ordered',     product:'Roma Pro V1.5',              time:'2 min ago' },
+    { emoji:'🌿', name:'Liam T.',    action:'got 27% off on',   product:'Moss Air Humidifier',        time:'4 min ago' },
+    { emoji:'🧊', name:'Priya K.',   action:'added to cart',    product:'Govee Nugget Ice Maker Pro', time:'just now' },
+    { emoji:'💨', name:'Omar F.',    action:'checked out',      product:'GoveeLife Tower Fan 2 Max',  time:'1 min ago' },
+    { emoji:'🎉', name:'Jessica R.', action:'scored a deal on', product:'Roma Pro — Summer Sale',     time:'3 min ago' },
+    { emoji:'🏠', name:'Marcus L.',  action:'is viewing',       product:'Home Essentials picks',      time:'now' },
+    { emoji:'⭐', name:'Aiko N.',    action:'rated 5 stars',    product:'Moss Air Humidifier',        time:'5 min ago' },
+    { emoji:'🛒', name:'Daniel W.',  action:'just purchased',   product:'GoveeLife Tower Fan 2 Max',  time:'just now' },
+    { emoji:'☕', name:'Elena B.',   action:'grabbed the deal', product:'Roma Pro V1.5 — $440',       time:'7 min ago' },
+    { emoji:'💧', name:'Yusuf A.',   action:'added to cart',    product:'Moss Air — Living Humidifier','time':'2 min ago' },
+  ];
+
+  const container = document.getElementById('activity-container');
+  let bubbleIndex = 0;
+  let activeBubbles = [];
+
+  function showBubble() {
+    const data = activities[bubbleIndex % activities.length];
+    bubbleIndex++;
+
+    const el = document.createElement('div');
+    el.className = 'activity-bubble';
+    el.innerHTML = `
+      <div class="bubble-avatar">${data.emoji}</div>
+      <div class="bubble-text">
+        <strong>${data.name} ${data.action} <span style="color:var(--forest)">${data.product}</span></strong>
+        <small>${data.time}</small>
+      </div>
+    `;
+
+    // Max 2 bubbles at once
+    if(activeBubbles.length >= 2) {
+      const old = activeBubbles.shift();
+      old.classList.add('hiding');
+      setTimeout(()=>old.remove(), 400);
+    }
+
+    container.appendChild(el);
+    activeBubbles.push(el);
+
+    // Auto-hide after 4.5s
+    setTimeout(()=>{
+      el.classList.add('hiding');
+      setTimeout(()=>{
+        el.remove();
+        activeBubbles = activeBubbles.filter(b=>b!==el);
+      }, 400);
+    }, 4500);
+  }
+
+  // First bubble after 2s, then every 5-8s random
+  setTimeout(()=>{
+    showBubble();
+    function scheduleNext() {
+      const delay = 5000 + Math.random() * 3000;
+      setTimeout(()=>{ showBubble(); scheduleNext(); }, delay);
+    }
+    scheduleNext();
+  }, 2000);
+</script>
+</body>
+</html>
